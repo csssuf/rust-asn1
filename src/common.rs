@@ -6,6 +6,7 @@ pub enum Tag {
     Integer = 0x2,
     BitString = 0x3,
     OctetString = 0x4,
+    Null = 0x5,
     ObjectIdentifier = 0x6,
     PrintableString = 0x13,
     UTCTime = 0x17,

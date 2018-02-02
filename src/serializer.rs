@@ -72,6 +72,10 @@ impl<'a> Serializer<'a> {
         self.writer.write_all(&body).unwrap();
     }
 
+    pub fn write_null(&mut self) {
+        return self._write_with_tag(Tag::Null, || vec![]);
+    }
+
     pub fn write_bool(&mut self, v: bool) {
         return self._write_with_tag(Tag::Bool, || {
             if v {
