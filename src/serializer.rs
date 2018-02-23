@@ -65,11 +65,11 @@ impl<'a> Serializer<'a> {
         }
     }
 
-    fn _write_with_tag<F>(&mut self, tag: Tag, body: F) where F: Fn() -> Vec<u8> {
+    fn _write_with_tag<T, F>(&mut self, tag: Tag, body: F) where T: AsRef<[u8]>, F: Fn() -> T {
         self.writer.write_u8(tag as u8).unwrap();
         let body = body();
-        self._write_length(body.len());
-        self.writer.write_all(&body).unwrap();
+        self._write_length(body.as_ref().len());
+        self.writer.write_all(body.as_ref()).unwrap();
     }
 
     pub fn write_null(&mut self) {
@@ -92,10 +92,8 @@ impl<'a> Serializer<'a> {
         });
     }
 
-    pub fn write_octet_string(&mut self, v: &Vec<u8>) {
-        return self._write_with_tag(Tag::OctetString, || {
-            return v.to_vec();
-        });
+    pub fn write_octet_string<T>(&mut self, v: T) where T: AsRef<[u8]> {
+        return self._write_with_tag(Tag::OctetString, || &v);
     }
 
     pub fn write_printable_string(&mut self, v: String) {
